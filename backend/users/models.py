@@ -53,7 +53,7 @@ class Follow(models.Model):
     )
 
     class Meta:
-        ordering = ['-id']
+        ordering = ('-id')
         constraints = [
             models.UniqueConstraint(
                 fields=['user', 'author'],
@@ -67,5 +67,5 @@ class Follow(models.Model):
         verbose_name = 'Подписка'
         verbose_name_plural = 'Подписки'
 
-        def __str__(self):
-            return f'{self.user} -> {self.author}'
+    def __str__(self):
+        return f'{self.user} -> {self.author}'

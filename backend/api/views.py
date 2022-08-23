@@ -4,17 +4,17 @@ from api.models import (Favorite, Ingredient, IngredientRecipe, Recipe,
 from api.pagination import CustomPagination
 from api.permissions import IsAuthorOrAdminOrReadOnly
 from api.serializers import (IngredientSerializer, RecipesReadSerializer,
-                             RecipesWriteSerializer,
-                             RecipeToRepresentationSerializer, TagSerializer)
+                             RecipesWriteSerializer, TagSerializer)
 from django.db.models import Sum
 from django.http import HttpResponse
-from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import permissions, status
+from methods import post_delete_favorite_and_shopping_cart
+from rest_framework import permissions
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
+
+from backend.settings import FILENAME
 
 
 class TagsViewSet(ReadOnlyModelViewSet):
@@ -46,46 +46,33 @@ class RecipesViewSet(ModelViewSet):
         detail=False,
         methods=['post', 'delete'],
         url_path=r'(?P<id>[\d]+)/favorite',
-        permission_classes=[IsAuthenticated]
+        permission_classes=(IsAuthenticated)
     )
     def favorite(self, request, id):
-        user = request.user
-        recipe = get_object_or_404(Recipe, id=id)
-        if request.method == 'POST':
-            Favorite.objects.create(user=user, recipe=recipe)
-            serializer = RecipeToRepresentationSerializer(recipe)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        obj = get_object_or_404(Favorite, user=user, recipe=recipe)
-        obj.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return post_delete_favorite_and_shopping_cart(request,
+                                                      Favorite,
+                                                      id)
 
     @action(
         detail=False,
         methods=['post', 'delete'],
         url_path=r'(?P<id>[\d]+)/shopping_cart',
-        permission_classes=[IsAuthenticated]
+        permission_classes=(IsAuthenticated)
     )
     def shopping_cart(self, request, id):
-        user = request.user
-        recipe = get_object_or_404(Recipe, id=id)
-        if request.method == 'POST':
-            ShoppingCart.objects.create(user=user, recipe=recipe)
-            serializer = RecipeToRepresentationSerializer(recipe)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        obj = get_object_or_404(ShoppingCart, user=user, recipe=recipe)
-        obj.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return post_delete_favorite_and_shopping_cart(request,
+                                                      ShoppingCart,
+                                                      id)
 
     @action(
         detail=False,
         methods=['get'],
         url_path='download_shopping_cart',
-        permission_classes=[IsAuthenticated]
+        permission_classes=(IsAuthenticated)
     )
     def download_shopping_cart(self, request):
-        user = request.user
         ingredients = IngredientRecipe.objects.filter(
-            recipe__shopping_carts__user=user
+            recipe__shopping_carts__user=request.user
         ).order_by(
             'ingredient__name'
         ).values(
@@ -97,7 +84,7 @@ class RecipesViewSet(ModelViewSet):
             f'{ingredient["ingredient__measurement_unit"]}'
             for ingredient in ingredients
         ])
-        filename = 'shopping_cart.txt'
+        filename = FILENAME
         response = HttpResponse(shopping_cart, content_type='text/plain')
         response['Content-Disposition'] = f'attachment; filename={filename}'
         return response
