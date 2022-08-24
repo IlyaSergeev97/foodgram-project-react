@@ -7,9 +7,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-ik%-rhu!o(fvy&qws0)0cdp&e5#s99ba%^$=2ahd^*cg%nc^t5'
 
 
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
+
 
 
 INSTALLED_APPS = [
@@ -61,7 +62,7 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': os.getenv('DB_ENGINE', default='django.db.backends.postgresql'),
-        'NAME': os.getenv('DB_NAME', default='foodgram'),
+        'NAME': os.getenv('DB_NAME', default='postgres'),
         'USER': os.getenv('POSTGRES_USER', default='postgres'),
         'PASSWORD': os.getenv('POSTGRES_PASSWORD', default='postgres'),
         'HOST': os.getenv('DB_HOST', default='localhost'),
@@ -135,6 +136,6 @@ DJOSER = {
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-SIX = 6
-LIMIT = 'limit'
 FILENAME = 'shopping_cart.txt'
+SIX = 6
+PAGE_SIZE_QUERY_PARAM = 'limit'

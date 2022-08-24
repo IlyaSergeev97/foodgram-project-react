@@ -1,7 +1,7 @@
+import api.methods
 from api.models import (Favorite, Ingredient, IngredientRecipe, Recipe,
                         ShoppingCart, Tag)
 from drf_extra_fields.fields import Base64ImageField
-from methods import favorited_and_shoping_cart
 from rest_framework import serializers
 from users.serializers import CustomUserSerializer
 
@@ -49,10 +49,12 @@ class RecipesReadSerializer(serializers.ModelSerializer):
         )
 
     def get_is_favorited(self, obj):
-        return favorited_and_shoping_cart(self, Favorite, obj)
+        return api.methods.favorited_and_shoping_cart(self, Favorite, obj)
+
 
     def get_is_in_shopping_cart(self, obj):
-        return favorited_and_shoping_cart(self, ShoppingCart, obj)
+        return api.methods.favorited_and_shoping_cart(self, ShoppingCart, obj)
+    
 
 
 class IngredientRecipeWriteSerializer(serializers.ModelSerializer):

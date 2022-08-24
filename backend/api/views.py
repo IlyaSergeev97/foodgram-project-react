@@ -1,4 +1,5 @@
 from api.filters import IngredientFilter, RecipeFilter
+from api.methods import post_delete_favorite_shopping_cart
 from api.models import (Favorite, Ingredient, IngredientRecipe, Recipe,
                         ShoppingCart, Tag)
 from api.pagination import CustomPagination
@@ -8,13 +9,13 @@ from api.serializers import (IngredientSerializer, RecipesReadSerializer,
 from django.db.models import Sum
 from django.http import HttpResponse
 from django_filters.rest_framework import DjangoFilterBackend
-from methods import post_delete_favorite_and_shopping_cart
-from rest_framework import permissions
+from rest_framework import permissions, status
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 
 from backend.settings import FILENAME
+
 
 
 class TagsViewSet(ReadOnlyModelViewSet):
@@ -32,7 +33,7 @@ class IngredientsViewSet(ReadOnlyModelViewSet):
 
 class RecipesViewSet(ModelViewSet):
     queryset = Recipe.objects.all()
-    permission_classes = [IsAuthorOrAdminOrReadOnly]
+    permission_classes = (IsAuthorOrAdminOrReadOnly,)
     filter_backends = (DjangoFilterBackend,)
     filterset_class = RecipeFilter
     pagination_class = CustomPagination
@@ -41,34 +42,33 @@ class RecipesViewSet(ModelViewSet):
         if self.request.method in permissions.SAFE_METHODS:
             return RecipesReadSerializer
         return RecipesWriteSerializer
+    
 
     @action(
         detail=False,
         methods=['post', 'delete'],
         url_path=r'(?P<id>[\d]+)/favorite',
-        permission_classes=(IsAuthenticated)
+        permission_classes=(IsAuthenticated,)
     )
     def favorite(self, request, id):
-        return post_delete_favorite_and_shopping_cart(request,
-                                                      Favorite,
-                                                      id)
+        return post_delete_favorite_shopping_cart(request, Favorite, id)
+
 
     @action(
         detail=False,
         methods=['post', 'delete'],
         url_path=r'(?P<id>[\d]+)/shopping_cart',
-        permission_classes=(IsAuthenticated)
+        permission_classes=(IsAuthenticated,)
     )
     def shopping_cart(self, request, id):
-        return post_delete_favorite_and_shopping_cart(request,
-                                                      ShoppingCart,
-                                                      id)
+        return post_delete_favorite_shopping_cart(request, ShoppingCart, id)
+
 
     @action(
         detail=False,
         methods=['get'],
         url_path='download_shopping_cart',
-        permission_classes=(IsAuthenticated)
+        permission_classes=(IsAuthenticated,)
     )
     def download_shopping_cart(self, request):
         ingredients = IngredientRecipe.objects.filter(
