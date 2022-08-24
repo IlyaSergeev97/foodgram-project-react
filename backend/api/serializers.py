@@ -51,10 +51,8 @@ class RecipesReadSerializer(serializers.ModelSerializer):
     def get_is_favorited(self, obj):
         return api.methods.favorited_and_shoping_cart(self, Favorite, obj)
 
-
     def get_is_in_shopping_cart(self, obj):
         return api.methods.favorited_and_shoping_cart(self, ShoppingCart, obj)
-    
 
 
 class IngredientRecipeWriteSerializer(serializers.ModelSerializer):

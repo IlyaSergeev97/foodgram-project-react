@@ -9,13 +9,12 @@ from api.serializers import (IngredientSerializer, RecipesReadSerializer,
 from django.db.models import Sum
 from django.http import HttpResponse
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import permissions, status
+from rest_framework import permissions
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 
 from backend.settings import FILENAME
-
 
 
 class TagsViewSet(ReadOnlyModelViewSet):
@@ -42,7 +41,6 @@ class RecipesViewSet(ModelViewSet):
         if self.request.method in permissions.SAFE_METHODS:
             return RecipesReadSerializer
         return RecipesWriteSerializer
-    
 
     @action(
         detail=False,
@@ -53,7 +51,6 @@ class RecipesViewSet(ModelViewSet):
     def favorite(self, request, id):
         return post_delete_favorite_shopping_cart(request, Favorite, id)
 
-
     @action(
         detail=False,
         methods=['post', 'delete'],
@@ -62,7 +59,6 @@ class RecipesViewSet(ModelViewSet):
     )
     def shopping_cart(self, request, id):
         return post_delete_favorite_shopping_cart(request, ShoppingCart, id)
-
 
     @action(
         detail=False,

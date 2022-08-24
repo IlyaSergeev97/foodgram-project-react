@@ -16,6 +16,7 @@ def post_delete_favorite_shopping_cart(request, model, id):
     obj.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
 
+
 def favorited_and_shoping_cart(self, models, obj):
     request = self.context.get('request')
     if not request or request.user.is_anonymous:
