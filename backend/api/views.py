@@ -1,3 +1,4 @@
+from backend.settings import FILENAME
 from django.db.models import Sum
 from django.http import HttpResponse
 from django_filters.rest_framework import DjangoFilterBackend
@@ -14,7 +15,6 @@ from api.pagination import CustomPagination
 from api.permissions import IsAuthorOrAdminOrReadOnly
 from api.serializers import (IngredientSerializer, RecipesReadSerializer,
                              RecipesWriteSerializer, TagSerializer)
-from backend.settings import FILENAME
 
 
 class TagsViewSet(ReadOnlyModelViewSet):
