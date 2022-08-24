@@ -1,5 +1,6 @@
 from rest_framework.pagination import PageNumberPagination
-from backend.settings import SIX, PAGE_SIZE_QUERY_PARAM
+
+from backend.settings import PAGE_SIZE_QUERY_PARAM, SIX
 
 
 class CustomPagination(PageNumberPagination):

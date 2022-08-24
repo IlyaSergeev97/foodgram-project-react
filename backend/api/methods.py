@@ -1,8 +1,9 @@
-import api.serializers
-from api.models import Recipe
 from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.response import Response
+
+import api.serializers
+from api.models import Recipe
 
 
 def post_delete_favorite_shopping_cart(request, model, id):

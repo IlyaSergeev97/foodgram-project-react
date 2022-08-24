@@ -1,11 +1,3 @@
-from api.filters import IngredientFilter, RecipeFilter
-from api.methods import post_delete_favorite_shopping_cart
-from api.models import (Favorite, Ingredient, IngredientRecipe, Recipe,
-                        ShoppingCart, Tag)
-from api.pagination import CustomPagination
-from api.permissions import IsAuthorOrAdminOrReadOnly
-from api.serializers import (IngredientSerializer, RecipesReadSerializer,
-                             RecipesWriteSerializer, TagSerializer)
 from django.db.models import Sum
 from django.http import HttpResponse
 from django_filters.rest_framework import DjangoFilterBackend
@@ -14,6 +6,14 @@ from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 
+from api.filters import IngredientFilter, RecipeFilter
+from api.methods import post_delete_favorite_shopping_cart
+from api.models import (Favorite, Ingredient, IngredientRecipe, Recipe,
+                        ShoppingCart, Tag)
+from api.pagination import CustomPagination
+from api.permissions import IsAuthorOrAdminOrReadOnly
+from api.serializers import (IngredientSerializer, RecipesReadSerializer,
+                             RecipesWriteSerializer, TagSerializer)
 from backend.settings import FILENAME
 
 
