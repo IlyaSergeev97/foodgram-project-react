@@ -9,7 +9,7 @@ services:
     env_file:
       - ./.env
   web:
-    build: ../backend
+    image: ilyasergeev26031997/foodgram:latest
     restart: always
     ports:
       - "8000:8000"
@@ -21,9 +21,8 @@ services:
     env_file:
       - ./.env
   frontend:
-    build:
-      context: ../frontend
-      dockerfile: Dockerfile
+    image: ilyasergeev26031997/frontend:v1
+    
     volumes:
       - ../frontend/:/app/result_build/
   nginx:
