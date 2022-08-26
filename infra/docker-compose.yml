@@ -24,7 +24,7 @@ services:
     image: ilyasergeev26031997/frontend:v1
     
     volumes:
-      - ../frontend/:/app/result_build/
+      - result_build:/app/result_build/build/
   nginx:
     image: nginx:1.19.3
     ports:
